@@ -1,14 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-/**
- * Middleware necessário para o Supabase Auth funcionar corretamente com
- * Server Components: renova o token de sessão a cada request e mantém
- * os cookies sincronizados entre o browser e o servidor.
- *
- * Também redireciona usuários não autenticados para /login ao tentar
- * acessar rotas protegidas do app.
- */
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });
 
@@ -33,22 +25,24 @@ export async function updateSession(request: NextRequest) {
 
   const { data: { user } } = await supabase.auth.getUser();
 
-  const isAuthRoute = request.nextUrl.pathname.startsWith("/login");
-  const isAuthCallback = request.nextUrl.pathname.startsWith("/auth/callback");
-  const isPublicAsset = request.nextUrl.pathname.startsWith("/_next") ||
-    request.nextUrl.pathname.startsWith("/icons") ||
-    request.nextUrl.pathname === "/manifest.json" ||
-    request.nextUrl.pathname === "/sw.js";
+  const path = request.nextUrl.pathname;
+  const isLoginPage = path === "/login";
+  const isAuthCallback = path.startsWith("/auth/callback");
 
-  if (!user && !isAuthRoute && !isAuthCallback && !isPublicAsset) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/login";
-    return NextResponse.redirect(url);
+  // Rota pública — deixa passar sem verificação
+  if (isLoginPage || isAuthCallback) {
+    if (user && isLoginPage) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/dashboard";
+      return NextResponse.redirect(url);
+    }
+    return supabaseResponse;
   }
 
-  if (user && isAuthRoute) {
+  // Rota protegida — redireciona para login se não autenticado
+  if (!user) {
     const url = request.nextUrl.clone();
-    url.pathname = "/dashboard";
+    url.pathname = "/login";
     return NextResponse.redirect(url);
   }
 
