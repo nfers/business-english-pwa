@@ -34,11 +34,13 @@ export async function updateSession(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
 
   const isAuthRoute = request.nextUrl.pathname.startsWith("/login");
+  const isAuthCallback = request.nextUrl.pathname.startsWith("/auth/callback");
   const isPublicAsset = request.nextUrl.pathname.startsWith("/_next") ||
     request.nextUrl.pathname.startsWith("/icons") ||
-    request.nextUrl.pathname === "/manifest.json";
+    request.nextUrl.pathname === "/manifest.json" ||
+    request.nextUrl.pathname === "/sw.js";
 
-  if (!user && !isAuthRoute && !isPublicAsset) {
+  if (!user && !isAuthRoute && !isAuthCallback && !isPublicAsset) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     return NextResponse.redirect(url);
