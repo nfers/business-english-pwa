@@ -5,7 +5,8 @@ type ActivityField =
   | "scenarios_completed"
   | "emails_corrected"
   | "speaking_attempts"
-  | "interview_attempts";
+  | "interview_attempts"
+  | "listening_attempts";
 
 /**
  * Incrementa em 1 o contador de atividade do dia (ver tabela daily_activity).

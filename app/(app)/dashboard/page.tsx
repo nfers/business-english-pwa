@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { CefrProgressBar } from "@/components/layout/cefr-progress-bar";
 import { Card } from "@/components/ui/card";
-import { Flame, BookOpenText, MessagesSquare, Mic } from "lucide-react";
+import { Flame, BookOpenText, Headphones, MessagesSquare, Mic } from "lucide-react";
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -38,11 +38,16 @@ export default async function DashboardPage() {
         <CefrProgressBar currentLevel="B1" />
       </Card>
 
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
         <StatCard
           icon={BookOpenText}
           label="Cards revisados hoje"
           value={todayActivity?.vocabulary_reviews ?? 0}
+        />
+        <StatCard
+          icon={Headphones}
+          label="Escuta hoje"
+          value={todayActivity?.listening_attempts ?? 0}
         />
         <StatCard
           icon={MessagesSquare}

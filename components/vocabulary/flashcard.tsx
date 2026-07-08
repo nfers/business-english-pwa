@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { AudioButton } from "@/components/ui/audio-button";
 
 export interface FlashcardData {
   id: string;
@@ -47,15 +48,21 @@ export function Flashcard({ card, onAnswer }: FlashcardProps) {
       </div>
 
       <div className="flex-1 flex flex-col items-center justify-center text-center gap-4">
-        <p className="font-display text-2xl font-semibold">{card.term}</p>
+        <div className="flex items-center gap-2">
+          <p className="font-display text-2xl font-semibold">{card.term}</p>
+          <AudioButton text={card.term} />
+        </div>
 
         {revealed ? (
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col items-center gap-2">
             <p className="text-lg text-[var(--color-accent)]">{card.translation_pt}</p>
             {card.example_sentence && (
-              <p className="text-sm text-[var(--color-fg-muted)] italic max-w-xs">
-                &ldquo;{card.example_sentence}&rdquo;
-              </p>
+              <>
+                <p className="text-sm text-[var(--color-fg-muted)] italic max-w-xs">
+                  &ldquo;{card.example_sentence}&rdquo;
+                </p>
+                <AudioButton text={card.example_sentence} label="Ouvir frase" />
+              </>
             )}
           </div>
         ) : (

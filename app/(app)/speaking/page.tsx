@@ -6,6 +6,7 @@ import { incrementDailyActivity } from "@/lib/supabase/activity-tracking";
 import { useAIFeedback } from "@/lib/hooks/use-ai-feedback";
 import { useVoiceRecording } from "@/lib/hooks/use-voice-recording";
 import { Card } from "@/components/ui/card";
+import { AudioButton } from "@/components/ui/audio-button";
 import { Mic, Square } from "lucide-react";
 import type { SpeakingFeedback } from "@/lib/ai/speaking-feedback";
 
@@ -77,7 +78,10 @@ export default function SpeakingPage() {
         </button>
 
         <Card>
-          <span className="text-xs font-semibold text-[var(--color-accent)]">{current.level}</span>
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold text-[var(--color-accent)]">{current.level}</span>
+            <AudioButton text={current.prompt_text} label="Ouvir pergunta" />
+          </div>
           <p className="text-sm mt-1">{current.prompt_text}</p>
         </Card>
 
