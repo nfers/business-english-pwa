@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
   BookOpenText,
+  Headphones,
   MessagesSquare,
   Mail,
   Mic,
@@ -15,6 +16,7 @@ import {
 const NAV_ITEMS = [
   { href: "/dashboard", label: "Painel", icon: LayoutDashboard },
   { href: "/vocabulary", label: "Vocabulário", icon: BookOpenText },
+  { href: "/listening", label: "Escuta", icon: Headphones },
   { href: "/scenarios", label: "Cenários", icon: MessagesSquare },
   { href: "/email-review", label: "Email", icon: Mail },
   { href: "/speaking", label: "Speaking", icon: Mic },
@@ -51,7 +53,7 @@ export function AppNav() {
       </nav>
 
       {/* Tabbar — mobile */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-10 flex border-t border-[var(--color-border)] bg-[var(--color-bg-elevated)] pb-[env(safe-area-inset-bottom)]">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-10 flex overflow-x-auto border-t border-[var(--color-border)] bg-[var(--color-bg-elevated)] pb-[env(safe-area-inset-bottom)]">
         {NAV_ITEMS.map(({ href, label, icon: Icon }) => {
           const isActive = pathname === href;
           return (
@@ -59,7 +61,7 @@ export function AppNav() {
               key={href}
               href={href}
               className={[
-                "flex flex-1 flex-col items-center gap-1 py-2.5 text-[10px] font-medium transition-colors",
+                "flex min-w-[64px] flex-1 flex-col items-center gap-1 py-2.5 text-[10px] font-medium transition-colors",
                 isActive ? "text-[var(--color-accent)]" : "text-[var(--color-fg-muted)]",
               ].join(" ")}
             >

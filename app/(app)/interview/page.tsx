@@ -6,6 +6,7 @@ import { incrementDailyActivity } from "@/lib/supabase/activity-tracking";
 import { useAIFeedback } from "@/lib/hooks/use-ai-feedback";
 import { useVoiceRecording } from "@/lib/hooks/use-voice-recording";
 import { Card } from "@/components/ui/card";
+import { AudioButton } from "@/components/ui/audio-button";
 import { Mic, Square, Keyboard } from "lucide-react";
 import type { InterviewFeedback } from "@/lib/ai/interview-feedback";
 
@@ -75,7 +76,10 @@ export default function InterviewPage() {
         </button>
 
         <Card>
-          <span className="text-xs font-semibold text-[var(--color-accent)]">{current.level}</span>
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold text-[var(--color-accent)]">{current.level}</span>
+            <AudioButton text={current.question_text} label="Ouvir pergunta" />
+          </div>
           <p className="text-sm mt-1">{current.question_text}</p>
         </Card>
 
