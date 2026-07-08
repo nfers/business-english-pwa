@@ -9,6 +9,7 @@ import {
   Mail,
   Mic,
   Briefcase,
+  Settings,
 } from "lucide-react";
 
 const NAV_ITEMS = [
@@ -18,6 +19,7 @@ const NAV_ITEMS = [
   { href: "/email-review", label: "Email", icon: Mail },
   { href: "/speaking", label: "Speaking", icon: Mic },
   { href: "/interview", label: "Entrevista", icon: Briefcase },
+  { href: "/settings", label: "Ajustes", icon: Settings },
 ];
 
 export function AppNav() {
