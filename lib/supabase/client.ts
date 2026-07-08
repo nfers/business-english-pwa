@@ -1,14 +1,12 @@
 import { createBrowserClient } from "@supabase/ssr";
+import { SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } from "./config";
 
 /**
  * Cliente Supabase para uso em Client Components.
- * Usa as variáveis públicas (anon key), seguras para expor no browser
- * porque o acesso aos dados é protegido por Row Level Security (ver
- * supabase/migrations/0001_init.sql).
+ * Usa as credenciais públicas (publishable key), seguras para expor no
+ * browser porque o acesso aos dados é protegido por Row Level Security
+ * (ver supabase/migrations/0001_init.sql).
  */
 export function createClient() {
-  return createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  );
+  return createBrowserClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 }
