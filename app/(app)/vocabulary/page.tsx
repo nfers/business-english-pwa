@@ -74,10 +74,15 @@ export default function VocabularyPage() {
     loadQueue();
   }, [loadQueue]);
 
-  async function handleAnswer(quality: ReviewQuality) {
+  function handleAnswer(quality: ReviewQuality) {
     if (!queue || queue.length === 0) return;
 
     const [current, ...rest] = queue;
+    setQueue(rest);
+    persistAnswer(current, quality);
+  }
+
+  async function persistAnswer(current: QueueItem, quality: ReviewQuality) {
     const supabase = createClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
@@ -106,8 +111,6 @@ export default function VocabularyPage() {
     );
 
     await incrementDailyActivity(supabase, user.id, "vocabulary_reviews");
-
-    setQueue(rest);
   }
 
   return (

@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run *)",
+      "Bash(curl -sS -I http://localhost:3000/login)",
+      "Bash(curl -sS -I http://192.168.1.19:3000/login)",
+      "Bash(npx tsc *)"
+    ]
+  }
+}

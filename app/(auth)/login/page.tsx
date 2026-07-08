@@ -8,6 +8,11 @@ export default function LoginPage() {
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
 
+  const [devEmail, setDevEmail] = useState("dev@fluencydesk.test");
+  const [devPassword, setDevPassword] = useState("");
+  const [devStatus, setDevStatus] = useState<"idle" | "loading" | "error">("idle");
+  const [devMessage, setDevMessage] = useState("");
+
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     setStatus("sending");
@@ -28,6 +33,41 @@ export default function LoginPage() {
     }
 
     setStatus("sent");
+  }
+
+  async function handleDevSignIn(event: React.FormEvent) {
+    event.preventDefault();
+    setDevStatus("loading");
+    setDevMessage("");
+
+    const supabase = createClient();
+    const { error } = await supabase.auth.signInWithPassword({ email: devEmail, password: devPassword });
+
+    if (error) {
+      setDevStatus("error");
+      setDevMessage(error.message);
+      return;
+    }
+
+    window.location.href = "/dashboard";
+  }
+
+  async function handleDevSignUp(event: React.MouseEvent) {
+    event.preventDefault();
+    setDevStatus("loading");
+    setDevMessage("");
+
+    const supabase = createClient();
+    const { error } = await supabase.auth.signUp({ email: devEmail, password: devPassword });
+
+    if (error) {
+      setDevStatus("error");
+      setDevMessage(error.message);
+      return;
+    }
+
+    setDevStatus("idle");
+    setDevMessage("Conta criada. Clique em Entrar para continuar.");
   }
 
   return (
@@ -69,6 +109,59 @@ export default function LoginPage() {
               {status === "sending" ? "Enviando..." : "Enviar link de acesso"}
             </button>
           </form>
+        )}
+
+        {process.env.NODE_ENV !== "production" && (
+          <div className="mt-8 rounded-lg border border-dashed border-[var(--color-border)] p-4">
+            <p className="mb-3 text-xs font-medium uppercase tracking-wide text-[var(--color-fg-muted)]">
+              Login com senha (dev only)
+            </p>
+            <form onSubmit={handleDevSignIn} className="flex flex-col gap-2">
+              <input
+                type="email"
+                required
+                value={devEmail}
+                onChange={(e) => setDevEmail(e.target.value)}
+                placeholder="dev@fluencydesk.test"
+                className="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-elevated)] px-3 py-2 text-sm outline-none focus:border-[var(--color-accent)]"
+              />
+              <input
+                type="password"
+                required
+                value={devPassword}
+                onChange={(e) => setDevPassword(e.target.value)}
+                placeholder="Senha"
+                className="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-elevated)] px-3 py-2 text-sm outline-none focus:border-[var(--color-accent)]"
+              />
+
+              {devMessage && (
+                <p className={`text-xs ${devStatus === "error" ? "text-[var(--color-warn)]" : "text-[var(--color-fg-muted)]"}`}>
+                  {devMessage}
+                </p>
+              )}
+
+              <div className="flex gap-2">
+                <button
+                  type="submit"
+                  disabled={devStatus === "loading" || !devEmail || !devPassword}
+                  className="flex-1 rounded-lg border border-[var(--color-border)] px-3 py-2 text-sm font-medium disabled:opacity-60"
+                >
+                  Entrar
+                </button>
+                <button
+                  type="button"
+                  onClick={handleDevSignUp}
+                  disabled={devStatus === "loading" || !devEmail || !devPassword}
+                  className="flex-1 rounded-lg border border-[var(--color-border)] px-3 py-2 text-sm font-medium disabled:opacity-60"
+                >
+                  Criar conta
+                </button>
+              </div>
+            </form>
+            <p className="mt-2 text-xs text-[var(--color-fg-muted)]">
+              Requer &quot;Confirm email&quot; desativado no Supabase (Authentication → Sign In / Providers → Email), senão o cadastro também dispara email e cai no mesmo rate limit.
+            </p>
+          </div>
         )}
       </div>
     </div>
